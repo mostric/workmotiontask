@@ -1,0 +1,26 @@
+server:
+  port: 8081
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: always
+      platform: postgres
+  datasource:
+    url: jdbc:postgresql://db:5432/workmotion
+    username: postgres
+    password: postgres
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      auto-offset-reset: latest
+      group-id: employee
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      client-id: employee-service
+      max-poll-records: 1
+      properties:
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer

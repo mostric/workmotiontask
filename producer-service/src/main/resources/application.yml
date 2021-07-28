@@ -1,0 +1,20 @@
+server:
+  port: 8081
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: always
+      platform: postgres
+  datasource:
+    url: jdbc:postgresql://db:5432/workmotion
+    username: postgres
+    password: postgres
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      client-id: api
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
