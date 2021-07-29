@@ -13,10 +13,6 @@
     <artifactId>producer-service</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <spring.boot.version>2.5.2</spring.boot.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -111,7 +107,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.5.2</version>
+                <version>${spring.boot.version}</version>
                 <configuration>
                     <image>
                         <name>${project.groupId}/${project.artifactId}:${project.version}</name>

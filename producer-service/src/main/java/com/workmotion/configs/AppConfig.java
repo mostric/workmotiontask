@@ -35,7 +35,7 @@ public class AppConfig {
     }
 
     @Bean
-    @Profile("!doc")
+    @Profile("!deploy")
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
@@ -45,8 +45,8 @@ public class AppConfig {
     }
 
     @Bean
-    @Profile("doc")
-    public Docket apiDoc() {
+    @Profile("deploy")
+    public Docket apiDeploy() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .host("localhost")
                 .select()

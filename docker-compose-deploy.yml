@@ -40,7 +40,7 @@ services:
       - kafka
       - db
     environment:
-      - "SPRING_PROFILES_ACTIVE=doc"
+      - "SPRING_PROFILES_ACTIVE=deploy"
 
   producer-service:
     image: com.workmotion/producer-service:1.0-SNAPSHOT
@@ -51,7 +51,7 @@ services:
       - kafka
       - consumer-service
     environment:
-      - "SPRING_PROFILES_ACTIVE=doc"
+      - "SPRING_PROFILES_ACTIVE=deploy"
 volumes:
   zookeeper_data:
     driver: local

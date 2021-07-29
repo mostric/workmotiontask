@@ -9,16 +9,16 @@ spring:
       mode: always
       platform: postgres
   datasource:
-    url: jdbc:postgresql://localhost:5432/workmotion
+    url: jdbc:postgresql://db:5432/workmotion
     username: postgres
     password: postgres
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
     consumer:
       auto-offset-reset: latest
       group-id: employee
-      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer2
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer2
       client-id: consumer-service
       max-poll-records: 1
       properties:

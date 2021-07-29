@@ -9,11 +9,11 @@ spring:
       mode: always
       platform: postgres
   datasource:
-    url: jdbc:postgresql://localhost:5432/workmotion
+    url: jdbc:postgresql://db:5432/workmotion
     username: postgres
     password: postgres
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
     producer:
       client-id: producer-service
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
