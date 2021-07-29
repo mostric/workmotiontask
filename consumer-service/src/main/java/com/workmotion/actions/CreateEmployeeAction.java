@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 
-import static com.workmotion.Consts.EmployeeConsts.EMPLOYEE_PARAM;
+import static com.workmotion.consts.EmployeeConsts.EMPLOYEE_PARAM;
 
 @AllArgsConstructor
 @Slf4j

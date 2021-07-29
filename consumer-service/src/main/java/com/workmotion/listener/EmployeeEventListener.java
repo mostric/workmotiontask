@@ -13,7 +13,7 @@ public class EmployeeEventListener {
 
     private final EmployeeStateMachineProcessor employeeStateMachineProcessor;
 
-    @KafkaListener(topics = "${kafka.employee.topic}")
+    @KafkaListener(topics = "employee-topic")
     public void consumeEmployeeEvent(EmployeeDto employee) {
         log.info("Starting employee process with id {} ...", employee.getId());
         employeeStateMachineProcessor.process(employee);

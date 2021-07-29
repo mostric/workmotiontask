@@ -30,7 +30,7 @@ public class EmployeeController {
     private final KafkaEmployeeService kafkaEmployeeService;
 
     @PostMapping
-    public ResponseEntity<EmployeeDto> addEmployee(@RequestBody CreateEmployeeRequest request) {
+    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody CreateEmployeeRequest request) {
         EmployeeDto employeeDto = populateEmployeeDto(request);
         return ResponseEntity
                 .ok()

@@ -42,7 +42,7 @@ services:
     environment:
       - "SPRING_PROFILES_ACTIVE=doc"
 
-  api-service:
+  producer-service:
     image: com.workmotion/producer-service:1.0-SNAPSHOT
     container_name: workmotion-producer
     ports:

@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.workmotion.Consts.EmployeeConsts.EMPLOYEE_PARAM;
+import static com.workmotion.consts.EmployeeConsts.EMPLOYEE_PARAM;
 
 @Slf4j
 public class EmployeeStateMachineProcessorImpl implements EmployeeStateMachineProcessor {
