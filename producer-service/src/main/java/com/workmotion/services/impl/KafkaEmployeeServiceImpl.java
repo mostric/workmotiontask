@@ -30,33 +30,34 @@ public class KafkaEmployeeServiceImpl implements KafkaEmployeeService {
     }
 
     @Override
-    public void toInCheck(String id) throws EmployeeNotFoundException {
-        sendDataToEmployeeTopic(id, EmployeeState.IN_CHECK);
+    public EmployeeDto toInCheck(String id) throws EmployeeNotFoundException {
+        return sendDataToEmployeeTopic(id, EmployeeState.IN_CHECK);
     }
 
     @Override
-    public void toApprove(String id) throws EmployeeNotFoundException {
-        sendDataToEmployeeTopic(id, EmployeeState.APPROVED);
+    public EmployeeDto toApprove(String id) throws EmployeeNotFoundException {
+        return sendDataToEmployeeTopic(id, EmployeeState.APPROVED);
     }
 
     @Override
-    public void toActivate(String id) throws EmployeeNotFoundException {
-        sendDataToEmployeeTopic(id, EmployeeState.ACTIVE);
+    public EmployeeDto toActivate(String id) throws EmployeeNotFoundException {
+        return sendDataToEmployeeTopic(id, EmployeeState.ACTIVE);
     }
 
     @Override
-    public EmployeeModel getEmployeeById(String id) throws EmployeeNotFoundException {
+    public EmployeeDto getStateForEmployeeId(String id) throws EmployeeNotFoundException {
         Optional<EmployeeModel> employeeModelOptional = employeeRepository.findById(id);
         if (employeeModelOptional.isEmpty()) {
             throw new EmployeeNotFoundException(id);
         }
-        return employeeModelOptional.get();
+        return getEmployeeDto(id, employeeModelOptional.get().getEmployeeState());
     }
 
-    private void sendDataToEmployeeTopic(String id, EmployeeState state) throws EmployeeNotFoundException {
+    private EmployeeDto sendDataToEmployeeTopic(String id, EmployeeState state) throws EmployeeNotFoundException {
         if (employeeRepository.existsById(id)) {
             EmployeeDto employeeDto = getEmployeeDto(id, state);
             kafkaTemplate.send(employeeTopic, employeeDto);
+            return employeeDto;
         } else {
             throw new EmployeeNotFoundException(id);
         }

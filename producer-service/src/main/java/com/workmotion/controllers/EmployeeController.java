@@ -1,9 +1,7 @@
 package com.workmotion.controllers;
 
 import com.workmotion.core.entities.EmployeeDto;
-import com.workmotion.core.enums.EmployeeState;
 import com.workmotion.core.exceptions.EmployeeNotFoundException;
-import com.workmotion.entities.EmployeeModel;
 import com.workmotion.requests.CreateEmployeeRequest;
 import com.workmotion.services.KafkaEmployeeService;
 import lombok.AllArgsConstructor;
@@ -30,34 +28,29 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody CreateEmployeeRequest request) {
         EmployeeDto employeeDto = populateEmployeeDto(request);
-        return ResponseEntity
-                .ok()
-                .body(kafkaEmployeeService.createEmployee(employeeDto));
+        return ResponseEntity.ok().body(kafkaEmployeeService.createEmployee(employeeDto));
     }
 
-    @PostMapping("/{id}/check")
-    public ResponseEntity<Void> toInCheck(@PathVariable String id) throws EmployeeNotFoundException {
+    @PostMapping("/{id}/toInCheck")
+    public ResponseEntity<EmployeeDto> toInCheck(@PathVariable String id) throws EmployeeNotFoundException {
         kafkaEmployeeService.toInCheck(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(kafkaEmployeeService.toInCheck(id));
     }
 
-    @PostMapping("/{id}/approve")
-    public ResponseEntity<Void> toApprove(@PathVariable String id) throws EmployeeNotFoundException {
-        kafkaEmployeeService.toApprove(id);
-        return ResponseEntity.ok().build();
+    @PostMapping("/{id}/toApprove")
+    public ResponseEntity<EmployeeDto> toApprove(@PathVariable String id) throws EmployeeNotFoundException {
+        return ResponseEntity.ok().body(kafkaEmployeeService.toApprove(id));
     }
 
-    @PostMapping("/{id}/activate")
-    public ResponseEntity<Void> toActivate(@PathVariable String id) throws EmployeeNotFoundException {
-        kafkaEmployeeService.toActivate(id);
-        return ResponseEntity.ok().build();
+    @PostMapping("/{id}/toActivate")
+    public ResponseEntity<EmployeeDto> toActivate(@PathVariable String id) throws EmployeeNotFoundException {
+        return ResponseEntity.ok().body(kafkaEmployeeService.toActivate(id));
     }
 
     @GetMapping("/{id}/state")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<EmployeeState> state(@PathVariable String id) throws EmployeeNotFoundException {
-        EmployeeModel employeeModel = kafkaEmployeeService.getEmployeeById(id);
-        return ResponseEntity.ok(employeeModel.getEmployeeState());
+    public ResponseEntity<EmployeeDto> state(@PathVariable String id) throws EmployeeNotFoundException {
+        return ResponseEntity.ok(kafkaEmployeeService.getStateForEmployeeId(id));
     }
 
     private EmployeeDto populateEmployeeDto(CreateEmployeeRequest request) {
