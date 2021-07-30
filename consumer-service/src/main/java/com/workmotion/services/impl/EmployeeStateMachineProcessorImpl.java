@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.workmotion.consts.EmployeeConsts.EMPLOYEE_PARAM;
 
@@ -41,7 +42,9 @@ public class EmployeeStateMachineProcessorImpl implements EmployeeStateMachinePr
                 employeeStateMachineStorage.getStateMachine(employeeId);
         stateMachine.getExtendedState().getVariables().put(EMPLOYEE_PARAM, employeeDto);
 
-        EmployeeStateEvent event = STATE2EVENT_MAP.get(employeeDto.getEmployeeState());
+        EmployeeStateEvent event = Optional
+                .ofNullable(STATE2EVENT_MAP.get(employeeDto.getEmployeeState()))
+                .orElse(EmployeeStateEvent.CREATE);
         Mono<Message<EmployeeStateEvent>> monoMessageEvent = Mono.just(MessageBuilder.withPayload(event).build());
         stateMachine.sendEvent(monoMessageEvent)
                 .doOnComplete(() -> log.info("Event '{}' was sent.", event))

@@ -2,10 +2,11 @@ package com.workmotion.services;
 
 import com.workmotion.core.entities.EmployeeDto;
 import com.workmotion.core.exceptions.EmployeeNotFoundException;
+import com.workmotion.entities.EmployeeModel;
 
 public interface EmployeeService {
 
-    EmployeeDto createEmployee(EmployeeDto employeeDto);
+    EmployeeModel createEmployee(EmployeeDto employeeDto);
 
-    EmployeeDto changeEmployeeState(EmployeeDto employeeDto) throws Exception, EmployeeNotFoundException;
+    EmployeeModel changeEmployeeState(EmployeeDto employeeDto) throws EmployeeNotFoundException;
 }

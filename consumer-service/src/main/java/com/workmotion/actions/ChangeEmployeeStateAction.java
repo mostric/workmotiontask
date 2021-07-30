@@ -2,6 +2,7 @@ package com.workmotion.actions;
 
 import com.workmotion.core.entities.EmployeeDto;
 import com.workmotion.core.enums.EmployeeState;
+import com.workmotion.entities.EmployeeModel;
 import com.workmotion.enums.EmployeeStateEvent;
 import com.workmotion.services.EmployeeService;
 import lombok.AllArgsConstructor;
@@ -26,9 +27,11 @@ public class ChangeEmployeeStateAction implements Action<EmployeeState, Employee
                 .getExtendedState()
                 .getVariables()
                 .get(EMPLOYEE_PARAM);
+        EmployeeState employeeState = employeeDto.getEmployeeState();
         EmployeeState nextState = stateContext.getTarget().getId();
-        log.info("Changing employee state from '{}' to '{}'...", employeeDto.getEmployeeState(), nextState);
         employeeDto.setEmployeeState(nextState);
-        employeeService.changeEmployeeState(employeeDto);
+        EmployeeModel employeeModel = employeeService.changeEmployeeState(employeeDto);
+        log.info("Employee state was changed from '{}' to '{}'.",
+                employeeState, employeeModel.getEmployeeState());
     }
 }

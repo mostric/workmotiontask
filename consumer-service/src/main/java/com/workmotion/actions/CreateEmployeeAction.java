@@ -2,6 +2,7 @@ package com.workmotion.actions;
 
 import com.workmotion.core.entities.EmployeeDto;
 import com.workmotion.core.enums.EmployeeState;
+import com.workmotion.entities.EmployeeModel;
 import com.workmotion.enums.EmployeeStateEvent;
 import com.workmotion.services.EmployeeService;
 import lombok.AllArgsConstructor;
@@ -24,8 +25,7 @@ public class CreateEmployeeAction implements Action<EmployeeState, EmployeeState
                 .getExtendedState()
                 .getVariables()
                 .get(EMPLOYEE_PARAM);
-        employeeDto.setEmployeeState(EmployeeState.ADDED);
-        log.info("Creating employee '{}'...", employeeDto.getId());
-        employeeService.createEmployee(employeeDto);
+        EmployeeModel employeeModel = employeeService.createEmployee(employeeDto);
+        log.info("Employee with id '{}' was created",  employeeModel.getId());
     }
 }

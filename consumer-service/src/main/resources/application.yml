@@ -3,7 +3,7 @@ server:
 spring:
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
   sql:
     init:
       mode: always
@@ -24,3 +24,8 @@ spring:
       properties:
         spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
         spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        request.timeout.ms: 300000
+        heartbeat.interval.ms: 1000
+        max.poll.interval.ms: 900000
+        max.poll.records: 100
+        session.timeout.ms: 600000

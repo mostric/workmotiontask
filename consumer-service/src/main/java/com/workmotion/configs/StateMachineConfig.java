@@ -35,19 +35,19 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Employ
     public void configure(StateMachineStateConfigurer<EmployeeState, EmployeeStateEvent> states) throws Exception {
         states
                 .withStates()
-                .initial(EmployeeState.ADDED)
+                .initial(EmployeeState.INITIAL)
                 .end(EmployeeState.ACTIVE)
                 .states(EnumSet.allOf(EmployeeState.class));
-
     }
 
     @Override
     public void configure(StateMachineTransitionConfigurer<EmployeeState, EmployeeStateEvent> transitions) throws Exception {
         transitions
                 .withExternal()
+                .source(EmployeeState.INITIAL)
                 .target(EmployeeState.ADDED)
                 .event(EmployeeStateEvent.CREATE)
-                .action(addAction())
+                .action(createAction())
 
                 .and()
                 .withExternal()
@@ -72,7 +72,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Employ
     }
 
     @Bean
-    public Action<EmployeeState, EmployeeStateEvent> addAction() {
+    public Action<EmployeeState, EmployeeStateEvent> createAction() {
         return new CreateEmployeeAction(employeeService);
     }
 

@@ -2,8 +2,9 @@ package com.workmotion.services.impl;
 
 import com.workmotion.core.entities.EmployeeDto;
 import com.workmotion.core.enums.EmployeeState;
-import com.workmotion.repositories.EmployeeRepository;
+import com.workmotion.core.exceptions.EmployeeNotFoundException;
 import com.workmotion.entities.EmployeeModel;
+import com.workmotion.repositories.EmployeeRepository;
 import com.workmotion.services.KafkaEmployeeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,28 +30,36 @@ public class KafkaEmployeeServiceImpl implements KafkaEmployeeService {
     }
 
     @Override
-    public void toInCheck(String id) {
-        changeState(id, EmployeeState.IN_CHECK);
+    public void toInCheck(String id) throws EmployeeNotFoundException {
+        sendDataToEmployeeTopic(id, EmployeeState.IN_CHECK);
     }
 
     @Override
-    public void toApprove(String id) {
-        changeState(id, EmployeeState.APPROVED);
+    public void toApprove(String id) throws EmployeeNotFoundException {
+        sendDataToEmployeeTopic(id, EmployeeState.APPROVED);
     }
 
     @Override
-    public void toActivate(String id) {
-        changeState(id, EmployeeState.ACTIVE);
+    public void toActivate(String id) throws EmployeeNotFoundException {
+        sendDataToEmployeeTopic(id, EmployeeState.ACTIVE);
     }
 
     @Override
-    public Optional<EmployeeModel> getEmployeeById(String id) {
-        return employeeRepository.findById(id);
+    public EmployeeModel getEmployeeById(String id) throws EmployeeNotFoundException {
+        Optional<EmployeeModel> employeeModelOptional = employeeRepository.findById(id);
+        if (employeeModelOptional.isEmpty()) {
+            throw new EmployeeNotFoundException(id);
+        }
+        return employeeModelOptional.get();
     }
 
-    private void changeState(String id, EmployeeState state) {
-        EmployeeDto employeeDto = getEmployeeDto(id, state);
-        kafkaTemplate.send(employeeTopic, employeeDto);
+    private void sendDataToEmployeeTopic(String id, EmployeeState state) throws EmployeeNotFoundException {
+        if (employeeRepository.existsById(id)) {
+            EmployeeDto employeeDto = getEmployeeDto(id, state);
+            kafkaTemplate.send(employeeTopic, employeeDto);
+        } else {
+            throw new EmployeeNotFoundException(id);
+        }
     }
 
     private EmployeeDto getEmployeeDto(String id, EmployeeState state) {

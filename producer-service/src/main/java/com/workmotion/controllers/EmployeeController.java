@@ -2,8 +2,8 @@ package com.workmotion.controllers;
 
 import com.workmotion.core.entities.EmployeeDto;
 import com.workmotion.core.enums.EmployeeState;
-import com.workmotion.entities.EmployeeModel;
 import com.workmotion.core.exceptions.EmployeeNotFoundException;
+import com.workmotion.entities.EmployeeModel;
 import com.workmotion.requests.CreateEmployeeRequest;
 import com.workmotion.services.KafkaEmployeeService;
 import lombok.AllArgsConstructor;
@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -38,19 +36,19 @@ public class EmployeeController {
     }
 
     @PostMapping("/{id}/check")
-    public ResponseEntity<Void> check(@PathVariable String id) {
+    public ResponseEntity<Void> toInCheck(@PathVariable String id) throws EmployeeNotFoundException {
         kafkaEmployeeService.toInCheck(id);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/approve")
-    public ResponseEntity<Void> approve(@PathVariable String id) {
+    public ResponseEntity<Void> toApprove(@PathVariable String id) throws EmployeeNotFoundException {
         kafkaEmployeeService.toApprove(id);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/activate")
-    public ResponseEntity<Void> activate(@PathVariable String id) {
+    public ResponseEntity<Void> toActivate(@PathVariable String id) throws EmployeeNotFoundException {
         kafkaEmployeeService.toActivate(id);
         return ResponseEntity.ok().build();
     }
@@ -58,18 +56,14 @@ public class EmployeeController {
     @GetMapping("/{id}/state")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<EmployeeState> state(@PathVariable String id) throws EmployeeNotFoundException {
-        Optional<EmployeeModel> employee = kafkaEmployeeService.getEmployeeById(id);
-        if (employee.isEmpty()) {
-            throw new EmployeeNotFoundException(id);
-        }
-        return ResponseEntity.ok(employee.get().getEmployeeState());
+        EmployeeModel employeeModel = kafkaEmployeeService.getEmployeeById(id);
+        return ResponseEntity.ok(employeeModel.getEmployeeState());
     }
 
     private EmployeeDto populateEmployeeDto(CreateEmployeeRequest request) {
         EmployeeDto employeeDto = new EmployeeDto();
         employeeDto.setName(request.getName());
         employeeDto.setAge(request.getAge());
-        employeeDto.setSkills(request.getSkills());
         employeeDto.setSkills(request.getSkills());
         return employeeDto;
     }
@@ -79,5 +73,12 @@ public class EmployeeController {
         String message = ex.getMessage();
         log.error(message, ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> onGeneralException(Exception ex) {
+        String message = ex.getMessage();
+        log.error(message, ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
     }
 }
